@@ -3,9 +3,9 @@ import os
 import pathlib
 
 
-def proccess_raw_data(raw_file: str, out_file: str):
+def proccess_raw_data(raw_file: str, out_file):
 
-    with open(raw_file, 'r', encoding="Windows-1251") as r_file, open(out_file, "a", encoding="UTF-8") as out:
+    with open(raw_file, 'r', encoding="Windows-1251") as r_file:
         text = r_file.read()
         
         
@@ -34,7 +34,7 @@ def proccess_raw_data(raw_file: str, out_file: str):
 
             pops = re.findall(pop_pattern, province)
             for pop in pops:
-                out.write(f"{year},{country_name},{prov_name},{pop[0]},{pop[1]},{pop[2]},{pop[3]}\n")
+                out_file.write(f"{year},{country_name},{prov_name},{pop[0]},{pop[1]},{pop[2]},{pop[3]}\n")
 
 
 
@@ -46,7 +46,9 @@ def main():
 
     files = os.listdir(path)
 
-    for file in files:
-            proccess_raw_data( path.joinpath(pathlib.Path(file)), "output.csv")
+    with open("output.csv", "x", encoding="UTF-8") as out:
+        out.write("Year,Tag,Province,Type,Size,Culture,Religion\n")
+        for file in files:
+            proccess_raw_data( path.joinpath(pathlib.Path(file)), out)
 
 main()
